@@ -4,17 +4,17 @@
 //reload page
 $(document).ready( function () {
 	$("input:checkbox").removeAttr("checked");
-	$(window).load(function(){
 	
 		$.ajax({
 			type:"GET",
-			url:"",
+			url:"task",
 			dataType:"json",
 			success:function(lstTodo){
 				$.each(lstTodo,function(key,object){
-					var output = "<li><div class='view' id="+object.id+">"+
+					key = key + 1;
+					var output = "<li><div class='view' id="+key+">"+
 				      "<input class='toggle' type='checkbox'>"+
-				      "<label>"+object.name+"</label>"+
+				      "<label>"+object.value+"</label>"+
 				      "<a class='destroy'></a>"+
 				    "</div></li>";
 					$("input:checkbox").removeAttr('checked');
@@ -23,7 +23,6 @@ $(document).ready( function () {
 				});
 			}
 		});
-	});
 	//enter to do list
 	$("body").on("keypress","#new-todo", function (e) {
 		if(e.which == 13){
@@ -35,14 +34,14 @@ $(document).ready( function () {
 				type: "POST",
 				data: {"param" : input},
 				url: "newTask",
-				success: function(key) {	
-					var output = "<li><div class='view' id="+key+">"+
+				success: function(id) {
+					var output = "<li><div class='view' id="+id+">"+
 				      "<input class='toggle' type='checkbox'>"+
 				      "<label>"+input+"</label>"+
 				      "<a class='destroy'></a>"+
 				    "</div></li>";
-					var countItem = "<b id=count>"+key+" items</b>";
-					console.log("Key is : "+key)
+					var countItem = "<b id=count>"+id+" items</b>";
+					console.log("Key is : "+id)
 					$("ul").append(output);
 					$("#count").remove();
 					$("#todo-count").append(countItem);
@@ -83,9 +82,9 @@ $(document).ready( function () {
 			selected = ["-1"];
 			console.log($(this).attr("id"));
 			$.ajax({
-				type:"GET",
+				type:"DELETE",
 				data:{"deleteItem":selected},
-				url:"LoadDataServlet",
+				url:"deleteItem",
 				success:function(){
 					console.log("Delete all");
 					$("input:checkbox").removeAttr("checked");
@@ -105,9 +104,9 @@ $(document).ready( function () {
 			    selected.push($(this).parent().attr('id'));
 			});
 			$.ajax({
-				type:"GET",
+				type:"DELETE",
 				data:{"deleteItem":selected},
-				url:"LoadDataServlet",
+				url:"deleteItem",
 				success:function(key){
 					var countItem = "<b id=count>"+key+" items</b>";
 					$("#count").remove();
@@ -128,11 +127,11 @@ $(document).ready( function () {
 		var itemParent = $(this).parent();
 		var valueItem = "";
 		var item = $(itemParent).attr("id");
-		console.log("id is: "+item);
+		console.log("Id was chosen is: "+item);
 		$.ajax({
-			type:"POST",
+			type:"DELETE",
 			data:{"itemChoose":item,"param":valueItem},
-			url:"LoadDataServlet",
+			url:"deleteTask",
 			success:function(key){
 				var item1 = $("#"+item).parent();
 				console.log(item1);
@@ -149,15 +148,15 @@ $(document).ready( function () {
 	//Edit items
 	$(function(){
 		$("body").on("dblclick",".view",function(e){
-			//e.stopPropagation();
+			e.stopPropagation();
 			var currentEle = $(this);
 			console.log("Element is:"+$(this).html());
 			var idEdit = $(this).attr("id");
 			console.log("The parent Tag have id is"+idEdit+" is: "+$("#"+idEdit).parent());
 			$.ajax({
-				type:"POST",
+				type:"PUT",
 				data:{"param":"","itemChoose":"","idEdit":idEdit},
-				url:"LoadDataServlet",
+				url:"getValue",
 				success:function(value){
 					editable(currentEle,value,idEdit);
 				}
@@ -172,32 +171,34 @@ $(document).ready( function () {
 			if(event.keyCode == 13){
 				var newValue = $(".edit").val().trim();
 				$.ajax({
-					type:"POST",
+					type:"PUT",
 					data:{"param":"","itemChoose":"","idEdit":idEdit,"newValue":newValue},
-					url:"LoadDataServlet",
+					url:"editItem",
 					success:function(){
 						$(currentEle).html("<input class='toggle' type='checkbox'>"+
 								"<label>"+newValue+"</label>"+
 							      "<a class='destroy'></a>");
+						value = newValue;
 					}
 				});
 			}
 		});
-		$("body").on("click",".view",function(){
+		/*$("body").on("click",".view",function(){
 			$(currentEle).html("<input class='edit' type = 'text' value = '"+value+"'></input>");
 			$(".edit").focus();
 			var newValue = $(".edit").val().trim();
 			$.ajax({
-				type:"POST",
+				type:"PUT",
 				data:{"param":"","itemChoose":"","idEdit":idEdit,"newValue":newValue},
-				url:"LoadDataServlet",
+				url:"editItem",
 				success:function(){
 					$(currentEle).html("<input class='toggle' type='checkbox'>"+
 							"<label>"+newValue+"</label>"+
 						      "<a class='destroy'></a>");
+					value = newValue;
 				}
 			});
-		});
+		});*/
 		
 	}
 });

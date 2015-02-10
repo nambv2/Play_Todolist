@@ -89,7 +89,6 @@ body {
 #todo-list li .view label {
 }
 #todo-list li .edit {
-    display: none;
 }
 #todoapp footer {
     background: none repeat scroll 0 0 #f4fce8;

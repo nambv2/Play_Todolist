@@ -3,8 +3,14 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.task()
+GET		/							controllers.Application.index()
+#Task
+GET		/task						controllers.Application.task()
 POST	/newTask					controllers.Application.newTask()
+DELETE	/deleteTask					controllers.Application.deleteTask()
+DELETE	/deleteItem					controllers.Application.deleteItems()
+PUT		/getValue					controllers.Application.getValue()
+PUT		/editItem					controllers.Application.editItem()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

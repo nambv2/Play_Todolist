@@ -19,9 +19,10 @@ public class Application extends Controller {
     
     //create new todo items
     public static Result newTask(){
-    	
+    	int id = 0;
     	Map<String, String[]> params = request().body().asFormUrlEncoded();
     	String name = params.get("param")[0];
+    	id++;
     	return ok(TodoListModels.newTask(name));
     }
     

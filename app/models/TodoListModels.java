@@ -25,14 +25,21 @@ public class TodoListModels {
 			BasicDBObject document = new BasicDBObject();
 			DBCursor dbCursor = ConfigDB.Database().find()
 					.skip((int) (ConfigDB.Database().count() - 1));
-			while(dbCursor.hasNext()){
-				String tam = dbCursor.next().get("_id").toString();
-				id = Integer.parseInt(tam);
+			if ((int) ConfigDB.Database().count() == 0) {
+				id++;
+				document.put("_id", id);
+				document.put("value", todo);
+				ConfigDB.Database().insert(document);
+			} else {
+				while (dbCursor.hasNext()) {
+					id = Integer
+							.parseInt(dbCursor.next().get("_id").toString());
+				}
+				id++;
+				document.put("_id", id);
+				document.put("value", todo);
+				ConfigDB.Database().insert(document);
 			}
-			id ++;
-			document.put("_id", id);
-			document.put("value", todo);
-			ConfigDB.Database().insert(document);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

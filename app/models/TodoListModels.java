@@ -21,6 +21,7 @@ public class TodoListModels {
 	// Create a new task
 	public static String newTask(String todo) {
 		int id = 0;
+		int size = 0;
 		try {
 			BasicDBObject document = new BasicDBObject();
 			DBCursor dbCursor = ConfigDB.Database().find()
@@ -39,11 +40,12 @@ public class TodoListModels {
 				document.put("_id", id);
 				document.put("value", todo);
 				ConfigDB.Database().insert(document);
+				size = (int)ConfigDB.Database().count();
 			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		return Integer.toString(id);
+		return Integer.toString(size);
 	}
 
 	// refresh task
@@ -112,6 +114,7 @@ public class TodoListModels {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Value is: "+value);
 		return value;
 	}
 

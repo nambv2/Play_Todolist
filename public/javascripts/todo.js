@@ -12,7 +12,7 @@ $(document).ready( function () {
 			success:function(lstTodo){
 				$.each(lstTodo,function(key,object){
 					key = key + 1;
-					var output = "<li><div class='view' id="+key+">"+
+					var output = "<li><div class='view' id="+object._id+">"+
 				      "<input class='toggle' type='checkbox'>"+
 				      "<label>"+object.value+"</label>"+
 				      "<a class='destroy'></a>"+
@@ -183,9 +183,7 @@ $(document).ready( function () {
 				});
 			}
 		});
-		/*$("body").on("click",".view",function(){
-			$(currentEle).html("<input class='edit' type = 'text' value = '"+value+"'></input>");
-			$(".edit").focus();
+		$(".edit").blur(function(){
 			var newValue = $(".edit").val().trim();
 			$.ajax({
 				type:"PUT",
@@ -198,7 +196,7 @@ $(document).ready( function () {
 					value = newValue;
 				}
 			});
-		});*/
+	    });
 		
 	}
 });

@@ -30,6 +30,7 @@ public class TodoListModels {
 				id++;
 				document.put("_id", id);
 				document.put("value", todo);
+				size = 1;
 				ConfigDB.Database().insert(document);
 			} else {
 				while (dbCursor.hasNext()) {

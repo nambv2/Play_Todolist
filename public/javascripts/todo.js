@@ -21,6 +21,11 @@ $(document).ready( function () {
 	            	$("ul").append(output);
 	            	$("#new-todo").val("");
 				});
+            	var id = Object.keys(lstTodo).length;
+            	if(id != 0){
+            		var countItem = "<b id=count>"+id+" items left</b>";
+    				$("#todo-count").append(countItem);
+            	}
 			}
 		});
 	//enter to do list
@@ -40,8 +45,8 @@ $(document).ready( function () {
 				      "<label>"+input+"</label>"+
 				      "<a class='destroy'></a>"+
 				    "</div></li>";
-					var countItem = "<b id=count>"+id+" items</b>";
-					console.log("Key is : "+id)
+					console.log("Id is: "+id);
+					var countItem = "<b id=count>"+id+" items left</b>";
 					$("ul").append(output);
 					$("#count").remove();
 					$("#todo-count").append(countItem);
@@ -56,7 +61,6 @@ $(document).ready( function () {
 		if ($("#toggle-all").is(":checked"))
         {
           $("input:checkbox").not(this).prop("checked", this.checked);
-          
         } else {
         	$('input:checkbox').removeAttr('checked');
         }
@@ -65,13 +69,23 @@ $(document).ready( function () {
 
 	//mark all
 	$("body").on("click","input[type=checkbox]",function(){
-		var n = $( "input:checked" ).length;
+		var countChecked = $( "input:checkbox:checked" ).length;
+		var count = $( "input:checkbox" ).length;
+		var countUnchecked =  0;
 		if($("#toggle-all").is(":checked")){
-			n=n-1;
+			countChecked = countChecked - 1;
 		}
-		var itemDel = "<b id=itemDel>Clear "+n+" completed</b>";
+		countUnchecked = count - countChecked - 1;
+		var itemDel = "<b id=itemDel>Clear "+countChecked+" completed</b>";
+		var countDouwnItem = "<b id=count>"+countUnchecked+" item(s) left</b>";
 		$("#itemDel").remove();
+		$("#count").remove();
+		$("#todo-count").append(countDouwnItem);
 		$("#clear-completed").append(itemDel);
+	});
+	
+	$("body").on("click",".toggle",function(){
+		$("#toggle-all").prop("checked",false);
 	});
 	
 	//event delete all
@@ -109,8 +123,7 @@ $(document).ready( function () {
 				url:"deleteItem",
 				success:function(key){
 					var countItem = "<b id=count>"+key+" items</b>";
-					$("#count").remove();
-					$("#todo-count").append(countItem);
+					$("#clear-completed").remove();
 					$("#new-todo").val("");
 					$('input:checked').each(function() {
 						var idTag = $(this).parent().attr("id");
@@ -136,7 +149,7 @@ $(document).ready( function () {
 				var item1 = $("#"+item).parent();
 				console.log(item1);
 				$("#"+item).remove();
-				var countItem = "<b id=count>"+key+" items</b>";
+				var countItem = "<b id=count>"+key+" items left</b>";
 				$("#count").remove();
 				$("#todo-count").append(countItem);
 				$("#new-todo").val("");
